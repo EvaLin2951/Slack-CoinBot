@@ -3,7 +3,7 @@ import Account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-def leaderboard(date):
+def leaderboard():
     date = datetime.now().strftime("%Y-%m-%d")
     leaderboard = "Coin Leaderboard (" + date + "):\n\n"
 
