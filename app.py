@@ -7,10 +7,12 @@ import daily_leaderboard
 import bot_token
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
     signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
 )
+
 
 @app.command("/bind")
 def handle_command_bind(ack, say, client, command):
@@ -76,8 +78,8 @@ def handle_message_events(say):
 
     say(random_response)
 
-date = datetime.now().strftime("%Y-%m-%d")
-daily_job = daily_leaderboard.send(bot_token.access_token, bot_token.channel_id, daily_leaderboard.leaderboard(date))
+
+daily_job = daily_leaderboard.send(bot_token.access_token, bot_token.channel_id, daily_leaderboard.leaderboard())
 def daily_job():
     scheduler = BlockingScheduler()
     scheduler.add_job(daily_job, 'cron', hour=9, minute=0)
@@ -85,6 +87,7 @@ def daily_job():
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
+
 
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 80)))
