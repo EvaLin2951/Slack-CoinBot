@@ -23,7 +23,7 @@ def bind_account(slack_user_id, email):
     # Check if an account with the same email already exists
     query = {'email': email}
     result = coin_accounts.find_one(query)
-    created_at = datetime.fromtimestamp(datetime.now().timestamp()).strftime("%Y-%m-%d %H:%M:%S")
+    created_at = int(datetime.now().timestamp())
     if result is None:
         # If no account exists with the email, create a new one
         new_account = Account(slack_user_id, email, 100, created_at, created_at)
@@ -64,10 +64,10 @@ def transfer_coin(slack_user_id, to_email, amount):
     account_balance -= amount
     to_account_balance += amount
     
-    updated_at = datetime.fromtimestamp(datetime.now().timestamp()).strftime("%Y-%m-%d %H:%M:%S")
+    updated_at = int(datetime.now().timestamp())
     coin_accounts.update_one(from_query, {'$set': {'coin_balance': account_balance, 'updated_at': updated_at}})
     coin_accounts.update_one(to_query, {'$set': {'coin_balance': to_account_balance, 'updated_at': updated_at}})
-    coin_flows.insert_one({'from_slack_user_id': slack_user_id, 'to_email': to_email, 'amount': amount})
+    coin_flows.insert_one({'from_slack_user_id': slack_user_id, 'to_email': to_email, 'amount': amount, 'date_time': updated_at})
     
     return "Coin transfer successful, you now have " + str(account_balance) + " coins"
 
@@ -87,7 +87,8 @@ def admin_add_coin(slack_user_id, to_email, amount):
     to_account_balance = coin_accounts.find_one(to_query)['coin_balance']
     to_account_balance += amount
 
-    updated_at = datetime.fromtimestamp(datetime.now().timestamp()).strftime("%Y-%m-%d %H:%M:%S")
+    updated_at = int(datetime.now().timestamp())
     coin_accounts.update_one(to_query, {'$set': {'coin_balance': to_account_balance, 'updated_at': updated_at}})
+    coin_flows.insert_one({'from_slack_user_id': "", 'to_email': to_email, 'amount': amount, 'date_time': updated_at})
 
     return "Coin added successfully"
