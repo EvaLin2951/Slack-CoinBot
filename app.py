@@ -4,7 +4,7 @@ import Account
 import random
 import daily_leaderboard
 import consts
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 app = App(
@@ -71,21 +71,19 @@ def handle_command_add(ack, say, client, command):
 
 
 @app.event("message")
-def handle_message_events(say):
-    responses = ["Hello there!", "Hi!", "Greetings!"]
-    random_response = random.choice(responses)
+def handle_message_events(event, say):
+    if event.get("subtype") is None or event.get("subtype") != "bot_message":
+        responses = ["Hello there!", "Hi!", "Greetings!"]
+        random_response = random.choice(responses)
+        say(random_response)
 
-    say(random_response)
 
-
-daily_job = daily_leaderboard.send(consts.access_token, consts.channel_id, daily_leaderboard.leaderboard())
 def daily_job():
-    scheduler = BlockingScheduler()
-    scheduler.add_job(daily_job, 'cron', hour=9, minute=0)
-    try:
-        scheduler.start()
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
+    daily_leaderboard.send(consts.access_token, consts.channel_id, daily_leaderboard.leaderboard())
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(daily_job, 'cron', hour=17, minute=28, timezone="America/New_York")
+scheduler.start()
 
 
 if __name__ == "__main__":
