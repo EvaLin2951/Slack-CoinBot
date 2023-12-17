@@ -79,7 +79,7 @@ def handle_message_events(say):
     say(random_response)
 
 
-daily_job = daily_leaderboard.send(bot_token.access_token, bot_token.channel_id, daily_leaderboard.leaderboard())
+daily_job = daily_leaderboard.send(consts_sample.access_token, consts_sample.channel_id, daily_leaderboard.leaderboard())
 def daily_job():
     scheduler = BlockingScheduler()
     scheduler.add_job(daily_job, 'cron', hour=9, minute=0)
