@@ -2,9 +2,8 @@ import os
 from slack_bolt import App
 import Account
 import random
-from datetime import datetime
 import daily_leaderboard
-import bot_token
+import consts
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 
@@ -79,7 +78,7 @@ def handle_message_events(say):
     say(random_response)
 
 
-daily_job = daily_leaderboard.send(consts_sample.access_token, consts_sample.channel_id, daily_leaderboard.leaderboard())
+daily_job = daily_leaderboard.send(consts.access_token, consts.channel_id, daily_leaderboard.leaderboard())
 def daily_job():
     scheduler = BlockingScheduler()
     scheduler.add_job(daily_job, 'cron', hour=9, minute=0)
