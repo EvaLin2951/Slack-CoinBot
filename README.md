@@ -7,4 +7,3 @@ Users can send Slash Commands to interact with CoinBot, executing actions such a
 
 CoinBot responds to commands sent via the Slack API to perform corresponding actions and utilizes MongoDB to keep track of account information. Additionally, CoinBot will push a leaderboard notification to a dedicated Slack channel at a fixed time every day. Here is a sequence diagram that shows the functioning of _/bind_ and _/transfer_ commands and the scheduled job:<br><br>
 <img width="1464" alt="SlackCoinBot_Sequence_Diagram" src="https://github.com/EvaLin2951/slack-coinbot/assets/132865370/b553aebd-5258-4d59-ae1b-b0e57152a88c"><br>
-
